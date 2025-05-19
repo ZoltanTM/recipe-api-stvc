@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class IngredientDto {
     private Long id;
     private String name;
-    //private String amount; // for use inside recipe context
     private Integer quantity;
 }

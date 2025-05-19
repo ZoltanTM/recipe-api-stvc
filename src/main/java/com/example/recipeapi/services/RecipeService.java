@@ -22,12 +22,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class RecipeService {
-//    List<RecipeDto> getAllRecipes();
-//    RecipeDto getRecipeById(UUID id);
-//    RecipeDto createRecipe(RecipeDto dto);
-//    RecipeDto updateRecipe(UUID id, RecipeDto dto);
-//    void deleteRecipe(UUID id);
-//    List<RecipeDto> searchRecipes(Integer maxPrep, Integer maxCook);
     private IngredientRepository ingredientRepository;
     private RecipeRepository recipeRepository;
     private RecipeMapper recipeMapper;

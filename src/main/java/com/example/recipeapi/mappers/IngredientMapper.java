@@ -8,10 +8,13 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface IngredientMapper {
-    IngredientDto toDto(Ingredient ingredient);
+    //@Mapping(target = "quantity", ignore = true)
+    static IngredientDto toDto(Ingredient ingredient) {
+        return null;
+    }
 
     Ingredient toEntity(IngredientDto ingredientDto);
 
-    //@Mapping(target = "id", ignore = true)
+    @Mapping(target = "id", ignore = true)
     void update(IngredientDto ingredientDto, @MappingTarget Ingredient ingredient);
 }

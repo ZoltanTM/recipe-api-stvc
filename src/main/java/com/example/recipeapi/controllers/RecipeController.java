@@ -28,15 +28,15 @@ public class RecipeController {
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
 
-//    @GetMapping
-//    public List<RecipeDto> getAllRecipes() {
-//        return recipeService.getAllRecipes();
-//    }
-//
-//    @GetMapping("/{id}")
-//    public RecipeDto getRecipeById(@PathVariable UUID id) {
-//        return recipeService.getRecipeById(id);
-//    }
+    @GetMapping
+    public List<RecipeDto> getAllRecipes() {
+        return recipeService.getAllRecipes();
+    }
+
+    @GetMapping("/{id}")
+    public RecipeDto getRecipeById(@PathVariable UUID id) {
+        return recipeService.getRecipeById(id);
+    }
 
     @PostMapping("/{recipe_id}/items")
     public ResponseEntity<RecipeDto> addToRecipe(//used to be RecipeIngredientDto
@@ -53,42 +53,34 @@ public class RecipeController {
             UriComponentsBuilder uriBuilder
     ) {
         //RecipeDto created = recipeService.createRecipe(recipeDto);
-        var recipe = new Recipe();
+        //var recipe = new Recipe();
+        var recipe = recipeMapper.toEntity(recipeDto);
         recipeRepository.save(recipe);
 
         var createdRecipeDto = recipeMapper.toDto(recipe);
-        var uri = uriBuilder.path("/recipe/{id}").buildAndExpand(createdRecipeDto.getId().toString());//toUri doesn't work, it wanted toString
+        var uri = uriBuilder.path("/recipe/{id}").buildAndExpand(
+                createdRecipeDto.getId().toString()).toUri();//toUri doesn't work, it wanted toString
 
-        return ResponseEntity.created(uri.toUri()).body(createdRecipeDto);
+        return ResponseEntity.created(uri).body(createdRecipeDto);//.toUri() now worked when making uri
         //return new ResponseEntity<>(createdRecipeDto, HttpStatus.CREATED); //createdRecipeDto instead of created
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<IngredientDto> getIngredient(@PathVariable Long id) {
-//        var ingredient = IngredientRepository.findById(id).orElse(null);
-//        if (ingredient == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(IngredientMapper.toDto(ingredient));
-//    }
+    @PutMapping("/{id}")
+    public RecipeDto updateRecipe(@PathVariable UUID id, @RequestBody @Valid RecipeDto dto) {
+        return recipeService.updateRecipe(id, dto);
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRecipe(@PathVariable UUID id) {
+        recipeService.deleteRecipe(id);
+        return ResponseEntity.noContent().build();
+    }
 
-//    @PutMapping("/{id}")
-//    public RecipeDto updateRecipe(@PathVariable UUID id, @RequestBody @Valid RecipeDto dto) {
-//        return recipeService.updateRecipe(id, dto);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteRecipe(@PathVariable UUID id) {
-//        recipeService.deleteRecipe(id);
-//        return ResponseEntity.noContent().build();
-//    }
-
-//    @GetMapping("/search")
-//    public List<RecipeDto> searchRecipes(
-//            @RequestParam(required = false) Integer maxPrep,
-//            @RequestParam(required = false) Integer maxCook
-//    ) {
-//        return recipeService.searchRecipes(maxPrep, maxCook);
-//    }
+    @GetMapping("/search")
+    public List<RecipeDto> searchRecipes(
+            @RequestParam(required = false) Integer maxPrep,
+            @RequestParam(required = false) Integer maxCook
+    ) {
+        return recipeService.searchRecipes(maxPrep, maxCook);
+    }
 }
